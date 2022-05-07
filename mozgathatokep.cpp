@@ -1,9 +1,8 @@
 #include "mozgathatokep.hpp"
-#include <sstream>
 
 using namespace genv;
 
-Mozgathatokep::Mozgathatokep(Window* window, int x, int y, int id, canvas hatter) : Widget(window, x, y), _id(id) {
+Mozgathatokep::Mozgathatokep(Window* window, int x, int y, int id, int bitmap[150][150]) : Widget(window, x, y), _id(id) {
     switch(_id) {
         case(0):
             _size_x = 150;
@@ -29,12 +28,15 @@ Mozgathatokep::Mozgathatokep(Window* window, int x, int y, int id, canvas hatter
     _fogotte = 1;
 }
 
-
 void Mozgathatokep::handle(const event &ev) {
     if (selected(ev.pos_x, ev.pos_y) && ev.button == btn_left) {
     }
 }
 
 void Mozgathatokep::draw() {
-    gout << move_to(_x, _y) << color(200, 200, 200) << box(10, 10);
+    for (int i=0; i<150; i++) {
+        for (int j=0; j<150; j++) {
+            gout << move_to(_x+i, _y+j) <<color(_bitmap[i][j],_bitmap[i][j],_bitmap[i][j]);
+        }
+    }
 }

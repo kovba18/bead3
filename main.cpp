@@ -1,39 +1,49 @@
 #include "menu.hpp"
+#include "palya.hpp"
 #include "mozgathatokep.hpp"
 #include "szamabr.hpp"
 #include "window.hpp"
 #include <iostream>
-
-//Tisztelt Tanár Úr!
-
-//Az alabbi file a masodik beadandom fofileja. A beadandohoz 8 db file tartozik, 4db .hpp es 4db .cpp file.
-//Ezeket a feltoltott fileok kozott talalja.
-
-//Kovács Balázs (kovba18)
-//BX700J
-
+#include <fstream>
 
 using namespace genv;
 
 class Content : public Window {
     public:
     Content() {
-    //A Szamabrazolo constructor function parameterei: window*, x és y pozicio, kiirt szam, also es felso hatar
-    widgets.push_back(new Szamabrazolo(this, 10, 10, 50, 0, 100));
-    widgets.push_back(new Szamabrazolo(this, 110, 10, 30, 10, 300));
+        std::ifstream befile("befile.txt");
+        canvas hatso;
+        hatso.open(150*4,150);
+        int bemenet[150][150];
+        int temp;
+        char k;
+        gout<<color(135,206,235)<<move_to(0,0)<<box_to(XX-1,YY-1);
+        for (int i=0; i<30; i++) {
+            for (int j=0; j<149; j++) {
+                befile>>temp>>k;
+                bemenet[i][j] = temp;
+                if (bemenet[i][j] != 0) {
+                    gout<<move_to(j, i)<<color(bemenet[i][j],bemenet[i][j],bemenet[i][j])<<dot;
+                    //gout<<move_to(300-i, j)<<color(bemenet[i][j],bemenet[i][j],bemenet[i][j])<<dot;
+                    //gout<<move_to(450-j, 150-i)<<color(bemenet[i][j],bemenet[i][j],bemenet[i][j])<<dot;
+                    //gout<<move_to(450+i, 150-j)<<color(bemenet[i][j],bemenet[i][j],bemenet[i][j])<<dot;
+                }
+            }
 
-    //A Menu constructor function parameterei: window*, x és y pozicio, maximum ysize, az opciok egy string tipusu vectorban
-    widgets.push_back(new Menu(this, 10,70,100,{"elso", "masodik", "harmadik", "negyedik", "otodik", "hatodik", "hetedik"}));
-    widgets.push_back(new Menu(this, 170,70,100,{"Inkscape", "Blender", "Gimp", "Audacity"}));
+            befile>>temp>>std::ws;
+            bemenet[i][149] = temp;
+
+        }
+        gout<<refresh;
+        widgets.push_back(new Mozgathatokep(this,100,100,2,bemenet));
+        widgets.push_back(new Palya(this,100,100,0));
     }
+
 };
 
 void Window::event_loop() {
     event ev;
-    for (size_t i = 0; i< widgets.size(); i++) {
-        widgets[i]->draw();
-    }
-    gout<< refresh;
+    //gout<<color(135,206,235)<<move_to(0,0)<<box_to(XX-1,YY-1);
     int focus = -1;
 
     while(gin >> ev) {
@@ -64,7 +74,6 @@ int main() {
 
     Content* aktualis = new Content();
 
-    //A megnyit es a bezar function a logfile-t hozza letre/zarja be
     aktualis->megnyit();
     aktualis->event_loop();
     aktualis->bezar();

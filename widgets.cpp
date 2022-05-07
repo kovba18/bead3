@@ -3,6 +3,8 @@
 #include "window.hpp"
 using namespace genv;
 
+Widget::Widget(Window* window, int x, int y, int sx, int sy) : _w(window),_x(x), _y(y), _size_x(sx), _size_y(sy) {}
+
 Widget::Widget(Window* window, int x, int y, int sy) : _w(window),_x(x), _y(y), _size_y(sy) {}
 
 Widget::Widget(Window* window, int x, int y) : _w(window),_x(x), _y(y) {}
