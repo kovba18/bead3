@@ -2,24 +2,24 @@
 #define PALYA_HPP_INCLUDED
 
 #include "Window.hpp"
+#include "mozgathatokep.hpp"
+#include <array>
 
-const int scale = 1;
 
 class Palya : public Widget {
 public:
     Palya(Window* window, int x, int y, bool kie);
     void handle(const genv::event &ev);
-    void output() {};
+    bool ellenoriz(int temp, int hajo, bool forgas);
     void draw();
+    void general();
 
     class Selector {
         protected:
             int _ex, _ey;
             bool _hajovane;
             bool _lott = false;
-            unsigned char _red;
-            unsigned char _green;
-            unsigned char _blue;
+            bool _hovered = false;
         public:
             Selector(int x, int y, bool hajovane);
             void handle(const genv::event &ev) {};
@@ -31,9 +31,11 @@ public:
     protected:
         bool _kie;
         int _meret = 10;
-        int _hajo[10][10];
-        //std::vector<std::vector<Selector*>> _cellak;
+        int _hajok[10][10];
+        std::vector<std::array<int, 3>> _poziciok;
+        int talaltszam = 0; //ossz:17
         Selector* _tabla[10][10];
+        canvas* _palyavaszon;
 };
 
 #endif // PALYA_HPP_INCLUDED

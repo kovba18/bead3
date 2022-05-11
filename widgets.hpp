@@ -16,7 +16,6 @@ public:
     Widget(Window* window,int x, int y, int sy);
     Widget(Window* window,int x, int y);
     virtual bool selected(int mouse_x, int mouse_y);
-    virtual void output() = 0;
     virtual void draw() = 0;
     virtual void handle(const event &ev) = 0;
 };

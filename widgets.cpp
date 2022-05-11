@@ -1,6 +1,7 @@
 #include "widgets.hpp"
 #include "graphics.hpp"
 #include "window.hpp"
+#include <iostream>
 using namespace genv;
 
 Widget::Widget(Window* window, int x, int y, int sx, int sy) : _w(window),_x(x), _y(y), _size_x(sx), _size_y(sy) {}

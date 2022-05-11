@@ -29,12 +29,6 @@ Menu::Menu(Window* window, int x, int y, int maxhossz, std::vector<std::string> 
     _menu<<refresh;
 }
 
-
-void Menu::output() {
-    if (_kijelolt >= 0) _w->stringlog(_lista[_kijelolt]->getstring());
-}
-
-
 void Menu::handle(const event &ev) {
     if (_magassag > _size_y) {
         if (ev.button == btn_wheelup && abs(_scroll) >= 2) _scroll-=sebesseg; else if (ev.button == btn_wheeldown && abs(_scroll) < _magassag+5 - _size_y) _scroll+=sebesseg;

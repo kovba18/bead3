@@ -11,39 +11,48 @@ using namespace genv;
 class Content : public Window {
     public:
     Content() {
-        std::ifstream befile("befile.txt");
-        canvas hatso;
-        hatso.open(150*4,150);
-        int bemenet[150][150];
+        gout<<color(135,135,135)<<move_to(0,0)<<box_to(XX-1,YY-1);
+        //widgets.push_back(new Palya(this,100,50,0));
+        //widgets.push_back(new Palya(this,100,400,0));
+        widgets.push_back(new Mozgathatokep(this,30,30,0));
+        widgets.push_back(new Mozgathatokep(this,60,30,1));
+        widgets.push_back(new Mozgathatokep(this,90,30,2));
+        widgets.push_back(new Mozgathatokep(this,120,30,3));
+        widgets.push_back(new Mozgathatokep(this,150,30,4));
+        gout<<refresh;
+    }
+};
+
+void Window::beolvas() {
+    std::ifstream befile("befile.txt");
+        std::vector<std::vector<int>> hajo;
         int temp;
         char k;
-        gout<<color(135,206,235)<<move_to(0,0)<<box_to(XX-1,YY-1);
-        for (int i=0; i<30; i++) {
+        for (int i=0; i<150; i++) {
+                std::vector<int> sor;
             for (int j=0; j<149; j++) {
                 befile>>temp>>k;
-                bemenet[i][j] = temp;
-                if (bemenet[i][j] != 0) {
-                    gout<<move_to(j, i)<<color(bemenet[i][j],bemenet[i][j],bemenet[i][j])<<dot;
-                    //gout<<move_to(300-i, j)<<color(bemenet[i][j],bemenet[i][j],bemenet[i][j])<<dot;
-                    //gout<<move_to(450-j, 150-i)<<color(bemenet[i][j],bemenet[i][j],bemenet[i][j])<<dot;
-                    //gout<<move_to(450+i, 150-j)<<color(bemenet[i][j],bemenet[i][j],bemenet[i][j])<<dot;
-                }
+                //betemp[j][i] = temp;
+                sor.push_back(temp);
             }
-
             befile>>temp>>std::ws;
-            bemenet[i][149] = temp;
-
+            sor.push_back(temp);
+            //betemp[149][i] = temp;
+            hajo.push_back(sor);
+            if (i%30 == 29) {
+                hajok.push_back(hajo);
+                hajo.clear();
+            }
         }
-        gout<<refresh;
-        widgets.push_back(new Mozgathatokep(this,100,100,2,bemenet));
-        widgets.push_back(new Palya(this,100,100,0));
-    }
+        //std::cout<<hajok.size()<<'\n';
+}
 
-};
+void Window::changeVector(std::vector<std::vector<int>> &be, int id) {
+    if (id < hajok.size()) be = hajok[id];
+}
 
 void Window::event_loop() {
     event ev;
-    //gout<<color(135,206,235)<<move_to(0,0)<<box_to(XX-1,YY-1);
     int focus = -1;
 
     while(gin >> ev) {
@@ -55,27 +64,21 @@ void Window::event_loop() {
         }
 
         if (focus > -1) {widgets[focus]->handle(ev);}
+        gout<<move_to(30,30)<<color(100,130,200)<<box_to(330,330);
         for (size_t i=0; i< widgets.size(); i++) {
             widgets[i]->draw();
         }
         gout << refresh;
-        if (ev.keycode == key_enter) {
-                std::cout<<"log"<<'\n';
-            for (size_t i=0; i< widgets.size(); i++) {
-                widgets[i]->output();
-            }
-        }
     }
 }
 
 int main() {
-    gout.open(XX,YY, false);
+    gout.open(XX,YY);
     gout.load_font("LiberationSans-Regular.ttf", 20);
-
     Content* aktualis = new Content();
+    aktualis->beolvas();
 
-    aktualis->megnyit();
     aktualis->event_loop();
-    aktualis->bezar();
+
     return 0;
 }

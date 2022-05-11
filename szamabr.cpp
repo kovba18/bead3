@@ -60,9 +60,6 @@ void Szamabrazolo::handle(const event &ev) {
         }
     }
 }
-void Szamabrazolo::output() {
-    _w->intlog(_szam);
-}
 
 void Szamabrazolo::draw() {
     std::stringstream ss;

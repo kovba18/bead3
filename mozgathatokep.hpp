@@ -5,19 +5,17 @@
 
 class Mozgathatokep : public Widget {
 public:
-    Mozgathatokep(Window* window, int x, int y, int id, int bitmap[150][150]);
+    Mozgathatokep(Window* window, int x, int y, int id);
     void handle(const genv::event &ev);
-    void output(){};
     void draw();
 
 protected:
-    int _rotation;
+    bool _rotated;
+    bool _held;
+    int mx, my;
     int _id;
-    bool _fogotte;
-    int _mx;
-    int _my;
-    int _bitmap[150][150];
-    std::vector <bool> _talalt;
+    int _hol;
+    std::vector<std::vector<int>> _bitmap;
 };
 
 #endif // MOZGATHATOKEP_HPP_INCLUDED
