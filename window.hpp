@@ -4,11 +4,14 @@
 #include "widgets.hpp"
 #include <vector>
 #include <fstream>
+#include <array>
 
-const int XX = 500;
-const int YY = 800;
+const int XX = 330;
+const int YY = 730;
 
-class Window
+class Sajatpalya;
+
+class Jatekmester
 {
 protected:
     std::vector<Widget*> widgets;
@@ -17,6 +20,11 @@ protected:
 public:
     void event_loop();
     void changeVector(std::vector<std::vector<int>> &be, int id);
+    void jatekkezd();
+    void korkezel();
+    canvas& finalize(Sajatpalya* asd);
+    bool Convertandcheck(Sajatpalya* asd, std::array<std::array<int, 10>,10> &eredeti);
+    std::array<std::array<int, 10>,10> ConvertToMatrix(Sajatpalya* asd);
     void beolvas();
 };
 

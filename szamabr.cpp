@@ -22,7 +22,7 @@ void Szamabrazolo::Gomb::release() {
 }
 
 
-Szamabrazolo::Szamabrazolo(Window* window, int x, int y, int szam, int also, int felso) : Widget(window, x, y), _szam(szam), _also(also), _felso(felso) {
+Szamabrazolo::Szamabrazolo(Jatekmester* jatekmester, int x, int y, int szam, int also, int felso) : Widget(jatekmester, x, y), _szam(szam), _also(also), _felso(felso) {
     if (_szam > _felso || _szam < _also) _szam = rand() % _felso + _also;
     _size_x = 90;
     _size_y = 50;

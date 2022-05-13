@@ -21,7 +21,7 @@ public:
             void release();
       };
 
-    Szamabrazolo(Window* window, int x, int y, int szam, int also, int felso);
+    Szamabrazolo(Jatekmester* jatekmester, int x, int y, int szam, int also, int felso);
     void handle(const genv::event &ev);
     void output();
     void draw();

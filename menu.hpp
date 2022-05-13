@@ -17,7 +17,7 @@ public:
             bool selected(int mouse_x, int mouse_y, int _x, int _y);
     };
 
-    Menu(Window* window, int x, int y, int maxhossz, std::vector<std::string> opciok);
+    Menu(Jatekmester* jatekmester, int x, int y, int maxhossz, std::vector<std::string> opciok);
     void handle(const genv::event &ev);
     void output();
     void draw();

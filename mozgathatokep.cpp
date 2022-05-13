@@ -1,54 +1,123 @@
 #include "mozgathatokep.hpp"
 #include <iostream>
 #include <vector>
+#include <cmath>
 
 using namespace genv;
 
-Mozgathatokep::Mozgathatokep(Window* window, int x, int y, int id) : Widget(window, x, y), _id(id) {
-    _w->beolvas();
-    _w->changeVector(_bitmap, _id);
+Sajatpalya::Mozgathatokep::Mozgathatokep(Sajatpalya* parent, int x, int y, int sizey, std::vector<std::vector<int>> bitmap) : _x(x), _y(y),_size_y(sizey), _bitmap(bitmap) {
     _size_x = 30;
-    _size_y = _bitmap[0].size();
-    if (_id == 0) _size_y = 150;
+    _rotated = 0;
+    _parent = parent;
 }
 
-void Mozgathatokep::handle(const event &ev) {
+bool Sajatpalya::Mozgathatokep::selected(int mouse_x, int mouse_y) {
+    if (_rotated) return (mouse_x > _x && mouse_x < _x + _size_y && mouse_y > _y && mouse_y < _y + _size_x);
+    else return (mouse_x > _x && mouse_x < _x + _size_x && mouse_y > _y && mouse_y < _y + _size_y);
+}
+
+
+void Sajatpalya::Mozgathatokep::addtohajohelyek() {
+    _parent->hajohelyek.push_back({(_x-_parent->_x)/30, (_y-_parent->_y)/30, _rotated, _size_y/30});
+}
+
+bool Sajatpalya::Mozgathatokep::foroghate() {
+    if (_rotated) {
+            if (_x+_size_x-_parent->_x-30 >=300 || _y+_size_y-_parent->_y >=300) return false;
+    } else if (_x+_size_y-_parent->_x-30 >=300 || _y+_size_x-_parent->_y-30 >=300) return false;
+    return true;
+}
+
+void Sajatpalya::Mozgathatokep::handle(const event &ev) {
     if (ev.type == ev_mouse) {
         if (selected(ev.pos_x, ev.pos_y) && ev.button == btn_left) {
-            if (_held) _held=0; else _held = 1;
+            if (_held && _parent->meghiv()) _held=0; else _held = 1;
             mx = ev.pos_x - _x;
             my = ev.pos_y - _y;
-        } else if (ev.button == btn_left) _held = 0;
+
+        } else if (ev.button == btn_left && _held && _parent->meghiv()) _held = 0;
 
         if (_held) {
-            _x = ((ev.pos_x-mx)/30) * 30;
-            _y = ((ev.pos_y-my)/30)*30;
+            if (_rotated) {
+                if (ev.pos_x-mx > _parent->_x && ev.pos_x-mx+_size_y-30 < _parent->_x+_parent->_size_y) _x = _parent->_x+((ev.pos_x-mx-_parent->_x)/30) * 30;
+                if (ev.pos_y-my > _parent->_y && ev.pos_y-my < _parent->_y+_parent->_size_x) _y = _parent->_y+((ev.pos_y-my-_parent->_y)/30)*30;
+            } else {
+                if (ev.pos_x-mx > _parent->_x && ev.pos_x-mx < _parent->_x+_parent->_size_x) _x = _parent->_x+((ev.pos_x-mx-_parent->_x)/30) * 30;
+                if (ev.pos_y-my > _parent->_y && ev.pos_y-my+_size_y-30 < _parent->_y+_parent->_size_y) _y = _parent->_y+((ev.pos_y-my-_parent->_y)/30)*30;
+            }
         }
     }
-    if (ev.keycode == key_right) {
+    if (ev.keycode == key_right &&_held && foroghate()) {
         _rotated = (_rotated+1)%2;
         int temp = mx;
         mx = my;
         my = temp;
-        temp = _size_x;
-        _size_x = _size_y;
-        _size_y = temp;
+    }
+}
+
+Sajatpalya::Sajatpalya(Jatekmester* jatekmester, int x, int y) : Widget(jatekmester, x, y, 300,300) {
+    _jatekmester->beolvas();
+    std::vector<std::vector<int>> tempbitmap;
+    _jatekmester->changeVector(tempbitmap, 0);
+    hajok.push_back(new Mozgathatokep(this, _x, _y, 150, tempbitmap));
+    _jatekmester->changeVector(tempbitmap, 1);
+    hajok.push_back(new Mozgathatokep(this,_x+30, _y, 120, tempbitmap));
+    _jatekmester->changeVector(tempbitmap, 2);
+    hajok.push_back(new Mozgathatokep(this,_x+60, _y, 90, tempbitmap));
+    _jatekmester->changeVector(tempbitmap, 3);
+    hajok.push_back(new Mozgathatokep(this,_x+90, _y, 90, tempbitmap));
+    _jatekmester->changeVector(tempbitmap, 4);
+    hajok.push_back(new Mozgathatokep(this,_x+120, _y, 60, tempbitmap));
+}
+
+void Sajatpalya::draw() {
+    _canv<<move_to(_x,_y)<<color(100,130,200)<<box_to(_x+_size_x,_y+_size_y);
+    for (size_t i=0; i<hajok.size(); i++) {
+        if (hajok[i]) hajok[i]->draw();
+    }
+}
+
+void Sajatpalya::handle(const genv::event &ev) {
+    for (size_t i=0; i<hajok.size(); i++) {
+        if (hajok[i]->isheld()) {
+            hajok[i]->handle(ev);
+            return;
+        }
+    }
+
+    for (size_t i=0; i<hajok.size(); i++) {
+        hajok[i]->handle(ev);
     }
 
 }
 
-void Mozgathatokep::draw() {
-    //gout<<move_to(30,30)<<color(100,130,200)<<box_to(330,330);
+bool Sajatpalya::meghiv() {
+    hajohelyek.clear();
+    for (size_t i=0; i<hajok.size(); i++) {
+        hajok[i]->addtohajohelyek();
+    }
+    bool igaze = _jatekmester->Convertandcheck(this, helyek);
+    for (int i=0; i<10; i++) {
+        for (int j=0; j<10; j++) {
+            std::cout<<helyek[i][j]<<' ';
+        }
+        std::cout<<'\n';
+    }
+    return igaze;
+}
+
+void Sajatpalya::Mozgathatokep::draw() {
+
     if (_rotated) {
-        for (int j=0; j<_size_x; j++) {
-            for (int i=0; i<_size_y; i++) {
-                if (_bitmap[i][j] != 0) gout << move_to(_x+j, _y+i)<<color(_bitmap[i][j],_bitmap[i][j],_bitmap[i][j])<<dot;
+        for (size_t j=0; j<_bitmap[0].size(); j++) {
+            for (size_t i=0; i<_bitmap.size(); i++) {
+                if (_bitmap[i][j] != 0) _parent->_canv << move_to(_x+j, _y+i)<<color(_bitmap[i][j],_bitmap[i][j],_bitmap[i][j])<<dot;
             }
         }
     } else {
-        for (int i=0; i<_size_x; i++) {
-            for (int j=0; j<_size_y; j++) {
-                if (_bitmap[i][j] != 0) gout << move_to(_x+i, _y+j)<<color(_bitmap[i][j],_bitmap[i][j],_bitmap[i][j])<<dot;
+        for (size_t i=0; i<_bitmap.size(); i++) {
+            for (size_t j=0; j<_bitmap[0].size(); j++) {
+                if (_bitmap[i][j] != 0) _parent->_canv << move_to(_x+i, _y+j)<<color(_bitmap[i][j],_bitmap[i][j],_bitmap[i][j])<<dot;
             }
         }
     }

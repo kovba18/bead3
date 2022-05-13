@@ -12,7 +12,7 @@ bool Menu::Listaelem::selected(int mouse_x, int mouse_y, int _x, int _y) {
 
 
 
-Menu::Menu(Window* window, int x, int y, int maxhossz, std::vector<std::string> opciok) : Widget(window, x, y, maxhossz) {
+Menu::Menu(Jatekmester* jatekmester, int x, int y, int maxhossz, std::vector<std::string> opciok) : Widget(jatekmester, x, y, maxhossz) {
     _size_x = 150;
     for (size_t i=0; i<opciok.size(); i++) {
         _lista.push_back(new Menu::Listaelem(opciok[i], _size_x-1));

@@ -5,16 +5,16 @@
 
 using namespace genv;
 
-class Window;
+class Jatekmester;
 
 class Widget {
 protected:
-    Window* _w;
+    Jatekmester* _jatekmester;
     int _x, _y, _size_x, _size_y;
 public:
-    Widget(Window* window,int x, int y, int sx, int sy);
-    Widget(Window* window,int x, int y, int sy);
-    Widget(Window* window,int x, int y);
+    Widget(Jatekmester* jatekmester,int x, int y, int sx, int sy);
+    Widget(Jatekmester* jatekmester,int x, int y, int sy);
+    Widget(Jatekmester* jatekmester,int x, int y);
     virtual bool selected(int mouse_x, int mouse_y);
     virtual void draw() = 0;
     virtual void handle(const event &ev) = 0;

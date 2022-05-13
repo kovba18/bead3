@@ -8,7 +8,7 @@
 
 class Palya : public Widget {
 public:
-    Palya(Window* window, int x, int y, bool kie);
+    Palya(Jatekmester* jatekmester, int x, int y);
     void handle(const genv::event &ev);
     bool ellenoriz(int temp, int hajo, bool forgas);
     void draw();
@@ -29,7 +29,6 @@ public:
     };
 
     protected:
-        bool _kie;
         int _meret = 10;
         int _hajok[10][10];
         std::vector<std::array<int, 3>> _poziciok;

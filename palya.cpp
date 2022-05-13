@@ -36,7 +36,6 @@ void Palya::Selector::draw() {
 	}
 }
 
-
 bool Palya::ellenoriz(int temp, int hajo, bool forg) {
     if (forg) {
         for (int j=0; j<hajo; j++) {
@@ -71,8 +70,7 @@ void Palya::general() {
     }
 }
 
-Palya::Palya(Window* window, int x, int y, bool kie) : Widget(window, x,y,10*30, 10*30), _kie(kie) {
-    //Mozgathatokep* elso = new Mozgathatokep(window, _x, _y, 0)
+Palya::Palya(Jatekmester* jatekmester, int x, int y) : Widget(jatekmester, x,y,10*30, 10*30) {
     general();
     for (int i=0; i<_meret; i++) {
         for (int j=0; j<_meret; j++) {
