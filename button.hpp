@@ -8,7 +8,6 @@ class Button : public Widget {
 public:
     Button(Jatekmester* jatekmester, std::string display, int x, int y, int sizex, int sizey, std::function<void()>);
     void handle(const genv::event &ev);
-    void output(){};
     void draw();
 
 protected:

@@ -11,6 +11,7 @@ class Sajatpalya : public Widget {
             Mozgathatokep(Sajatpalya* parent, int x, int y, int sizey, std::vector<std::vector<int>> bitmap);
             void handle(const genv::event &ev);
             void draw();
+            void canvasdraw(canvas& canv);
             bool isheld(){return _held;}
             void addtohajohelyek();
             bool selected(int mouse_x, int mouse_y);
@@ -31,14 +32,14 @@ class Sajatpalya : public Widget {
         void draw();
         bool meghiv();
         std::vector<std::array<int, 4>> outputhajohelyek(){return hajohelyek;}
+        std::array<std::array<int, 10>,10> outputhelyek() {return helyek;}
         void handle(const genv::event &ev);
-        void changecanvas(canvas& uj) {_canv = uj;}
+        void canvasrajzol(canvas& canv);
 
     protected:
         std::array<std::array<int, 10>,10> helyek;
         std::vector<std::array<int, 4>> hajohelyek;
         std::vector<Mozgathatokep*> hajok;
-        canvas& _canv = gout;
 };
 
 #endif // MOZGATHATOKEP_HPP_INCLUDED

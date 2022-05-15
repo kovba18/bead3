@@ -15,7 +15,7 @@ void Button::handle(const event &ev) {
     if (ev.button == -btn_left) _nyomott = false;
 }
 void Button::draw() {
-    gout.load_font("LiberationSans-Regular.ttf", 20);
-    if (_nyomott) gout<<color(255,100,200); else gout<<color(200, 200, 200);
-    gout << move_to(_x, _y) << box(_size_x, _size_y)<<move_to(_x+(_size_x-gout.twidth(_felirat))/2, _y+(_size_y-(gout.cascent()+gout.cdescent()))/2)<<color(0,0,0)<<text(_felirat);
+    gout.load_font("Retro Gaming.ttf", 20);
+    if (_nyomott) gout<<color(255,100,200); else gout<<color(100, 100, 100);
+    gout << move_to(_x, _y) << box(_size_x, _size_y)<<move_to(_x+(_size_x-gout.twidth(_felirat))/2, _y+(_size_y-(gout.cascent()+gout.cdescent()))/2)<<color(255,255,255)<<text(_felirat);
 }

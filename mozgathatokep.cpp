@@ -47,7 +47,7 @@ void Sajatpalya::Mozgathatokep::handle(const event &ev) {
             }
         }
     }
-    if (ev.keycode == key_right &&_held && foroghate()) {
+    if (ev.keycode == 'r' &&_held && foroghate()) {
         _rotated = (_rotated+1)%2;
         int temp = mx;
         mx = my;
@@ -68,10 +68,11 @@ Sajatpalya::Sajatpalya(Jatekmester* jatekmester, int x, int y) : Widget(jatekmes
     hajok.push_back(new Mozgathatokep(this,_x+90, _y, 90, tempbitmap));
     _jatekmester->changeVector(tempbitmap, 4);
     hajok.push_back(new Mozgathatokep(this,_x+120, _y, 60, tempbitmap));
+    meghiv();
 }
 
 void Sajatpalya::draw() {
-    _canv<<move_to(_x,_y)<<color(100,130,200)<<box_to(_x+_size_x,_y+_size_y);
+    gout<<move_to(_x,_y)<<color(100,130,200)<<box_to(_x+_size_x,_y+_size_y);
     for (size_t i=0; i<hajok.size(); i++) {
         if (hajok[i]) hajok[i]->draw();
     }
@@ -96,14 +97,7 @@ bool Sajatpalya::meghiv() {
     for (size_t i=0; i<hajok.size(); i++) {
         hajok[i]->addtohajohelyek();
     }
-    bool igaze = _jatekmester->Convertandcheck(this, helyek);
-    for (int i=0; i<10; i++) {
-        for (int j=0; j<10; j++) {
-            std::cout<<helyek[i][j]<<' ';
-        }
-        std::cout<<'\n';
-    }
-    return igaze;
+    return _jatekmester->Convertandcheck(this, helyek);
 }
 
 void Sajatpalya::Mozgathatokep::draw() {
@@ -111,14 +105,40 @@ void Sajatpalya::Mozgathatokep::draw() {
     if (_rotated) {
         for (size_t j=0; j<_bitmap[0].size(); j++) {
             for (size_t i=0; i<_bitmap.size(); i++) {
-                if (_bitmap[i][j] != 0) _parent->_canv << move_to(_x+j, _y+i)<<color(_bitmap[i][j],_bitmap[i][j],_bitmap[i][j])<<dot;
+                if (_bitmap[i][j] != 0) gout << move_to(_x+j, _y+i)<<color(_bitmap[i][j],_bitmap[i][j],_bitmap[i][j])<<dot;
             }
         }
     } else {
         for (size_t i=0; i<_bitmap.size(); i++) {
             for (size_t j=0; j<_bitmap[0].size(); j++) {
-                if (_bitmap[i][j] != 0) _parent->_canv << move_to(_x+i, _y+j)<<color(_bitmap[i][j],_bitmap[i][j],_bitmap[i][j])<<dot;
+                if (_bitmap[i][j] != 0) gout << move_to(_x+i, _y+j)<<color(_bitmap[i][j],_bitmap[i][j],_bitmap[i][j])<<dot;
             }
         }
     }
 }
+
+void Sajatpalya::Mozgathatokep::canvasdraw(canvas& canv) {
+
+    if (_rotated) {
+        for (size_t j=0; j<_bitmap[0].size(); j++) {
+            for (size_t i=0; i<_bitmap.size(); i++) {
+                if (_bitmap[i][j] != 0) canv << move_to(_x-_parent->_x+j, _y-_parent->_y+i)<<color(_bitmap[i][j],_bitmap[i][j],_bitmap[i][j])<<dot;
+            }
+        }
+    } else {
+        for (size_t i=0; i<_bitmap.size(); i++) {
+            for (size_t j=0; j<_bitmap[0].size(); j++) {
+                if (_bitmap[i][j] != 0) canv << move_to(_x-_parent->_x+i, _y-_parent->_y+j)<<color(_bitmap[i][j],_bitmap[i][j],_bitmap[i][j])<<dot;
+            }
+        }
+    }
+}
+
+void Sajatpalya::canvasrajzol(canvas& canv) {
+    canv<<move_to(0,0)<<color(100,130,200)<<box_to(_size_x-1,_size_y-1);
+
+    for (size_t i=0; i<hajok.size(); i++) {
+        if (hajok[i]) hajok[i]->canvasdraw(canv);
+    }
+}
+
